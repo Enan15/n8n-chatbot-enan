@@ -1,0 +1,160 @@
+{
+  "name": "Tugas-2_ChatbotSheets_Enan",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## Peran\nAnda adalah Asisten Informasi Pelatihan yang ramah dan membantu calon peserta.\n\n## Tugas\nJawab pertanyaan tentang program pelatihan (Bootcamp dan Skill Up), topik yang dipelajari, dan biayanya.\n\n## Aturan\n- Selalu gunakan tool \"Get row(s) in sheet in Google Sheets\" untuk mengambil data sebelum menjawab.\n- Jawab hanya berdasarkan data di sheet. Jangan mengarang nama pelatihan, topik, atau harga.\n- Tulis harga dalam format rupiah, contoh: Rp15.000.000.\n- Jika pelatihan yang ditanyakan tidak ada di sheet, katakan bahwa pelatihan tersebut belum tersedia.\n- Jika pertanyaan di luar topik pelatihan, jawab: \"Maaf, saya hanya dapat membantu seputar program pelatihan dan biayanya.\"\n- Jawab dalam bahasa Indonesia dengan ramah dan singkat.\n   - Tool mengembalikan seluruh baris data. Untuk pertanyaan termurah, termahal, atau perbandingan harga, bandingkan kolom \"Biaya atau Harga\" dari semua baris lalu sebutkan hasilnya. Jangan menjawab bahwa data tidak bisa diurutkan."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        128,
+        -32
+      ],
+      "id": "5772b184-1344-405b-b2e6-4b59d4d06641",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        176
+      ],
+      "id": "96f250cd-06e3-418c-b405-ea378a43fd5d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lpa1Ri1DAsQHgjnv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        144,
+        176
+      ],
+      "id": "8e90fd4b-682f-4a9e-9f07-d19831179fad",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1WWrKsCCiRUNcj-acR7y_8gzTAXeLOIfNQiSB5cYTpbQ",
+          "mode": "list",
+          "cachedResultName": "Copy of n8n 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WWrKsCCiRUNcj-acR7y_8gzTAXeLOIfNQiSB5cYTpbQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WWrKsCCiRUNcj-acR7y_8gzTAXeLOIfNQiSB5cYTpbQ/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        176
+      ],
+      "id": "1e8c9a58-3657-45d2-beb1-28c09c8e00c6",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9nBXp67BZuv9LD2u",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! Saya asisten informasi pelatihan. Tanyakan program, topik, atau biaya pelatihan ya",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -64,
+        -32
+      ],
+      "id": "42d46bb3-277d-4b91-8e43-e47089505423",
+      "name": "When chat message received",
+      "webhookId": "78b6aaa1-ef29-4172-9983-9043f63bd268"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "bafc16f2-008b-4fc2-928f-70bbef20b0aa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "ADhE5x3rn93RW1S1",
+  "tags": []
+}
