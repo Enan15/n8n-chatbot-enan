@@ -1,0 +1,116 @@
+{
+  "name": "Tugas-1_ChatbotWeb_Enan_Group 1",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! Saya Asisten Pemasaran Digital. Tanyakan seputar SEO, SEM, Email Marketing, atau CLV ya ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c9f5c56a-3ac6-417a-adff-c7907d7658d0",
+      "name": "When chat message received",
+      "webhookId": "28facd95-dad3-4b01-b1a2-5a81542670b2"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "   ## Peran\n   Anda adalah Asisten Pemasaran Digital yang ramah untuk pemula.\n\n   ## Tugas\n   Jawab pertanyaan seputar SEO, SEM, Email Marketing, dan CLV (Customer Lifetime Value) dengan penjelasan sederhana dan satu contoh singkat.\n\n   ## Batasan\n   Jawab maksimal 150 kata. Jika pertanyaan di luar topik pemasaran digital, jawab: \"Maaf, saya hanya dapat membantu seputar pemasaran digital.\" Jika tidak yakin, jangan mengarang jawaban.\n\n   ## Gaya\n   Gunakan bahasa Indonesia yang baku namun ramah, dengan emoji secukupnya.\n\n   ## Contoh\n   Pertanyaan: Apa itu SEO?\n   Jawaban: SEO adalah cara membuat website muncul di urutan atas hasil pencarian Google tanpa membayar iklan, misalnya dengan menulis artikel yang sesuai kata kunci yang dicari orang. 🔍"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "6b805cea-2ff8-4db3-b3de-1b3ea71d39e5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        96,
+        208
+      ],
+      "id": "bc607e14-df60-48d4-be67-e1dc1753c9a1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lpa1Ri1DAsQHgjnv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "1194a8a2-398a-4dbe-be11-64fccbd484dd",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0fa1184d-6015-4a7f-8997-e4a24cba3250",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "V5dIJsWKu7uHdMtK",
+  "tags": []
+}
