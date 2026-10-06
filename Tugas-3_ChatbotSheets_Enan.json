@@ -1,0 +1,160 @@
+{
+  "name": "Tugas-3_ChatbotSheets_Enan",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## Peran\nAnda adalah Asisten Informasi Pelatihan yang ramah dan membantu calon peserta.\n\n## Tugas\nJawab pertanyaan tentang program pelatihan (Bootcamp dan Skill Up), topik yang dipelajari, dan biayanya.\n\n## Aturan\n- Selalu gunakan tool \"Get row(s) in sheet in Google Sheets\" untuk mengambil data sebelum menjawab.\n- Jawab hanya berdasarkan data di sheet. Jangan mengarang nama pelatihan, topik, atau harga.\n- Tulis harga dalam format rupiah, contoh: Rp15.000.000.\n- Jika pelatihan yang ditanyakan tidak ada di sheet, katakan bahwa pelatihan tersebut belum tersedia.\n- Jika pertanyaan di luar topik pelatihan, jawab: \"Maaf, saya hanya dapat membantu seputar program pelatihan dan biayanya.\"\n- Jawab dalam bahasa Indonesia dengan ramah dan singkat."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "5e2ccd44-1fde-4c6a-aaed-3de8e71a5151",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        96,
+        208
+      ],
+      "id": "2b0d5b1c-52e5-4226-80c6-2cedb70b7470",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lpa1Ri1DAsQHgjnv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "a880280f-5956-4ce1-8552-e2c6ae3cb382",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pYceiln-8AlZRv1MMfCzhD__cjBOASCVezsADZErRjk",
+          "mode": "list",
+          "cachedResultName": "Copy of n8n 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYceiln-8AlZRv1MMfCzhD__cjBOASCVezsADZErRjk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYceiln-8AlZRv1MMfCzhD__cjBOASCVezsADZErRjk/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        384,
+        208
+      ],
+      "id": "d67cfd37-9933-4de8-860d-709964d2ca87",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9nBXp67BZuv9LD2u",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! Saya asisten informasi pelatihan. Tanyakan program, topik, atau biaya pelatihan ya",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b8a8650d-506f-4657-981e-ed6926fca929",
+      "name": "When chat message received",
+      "webhookId": "55d4e46e-1c0c-4d80-8f1b-b8df53d75f96"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "73843cb3-99fd-4457-bdc8-f3b7e72d0077",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "Kb4wzljlIqrSuegQ",
+  "tags": []
+}
